@@ -71,6 +71,40 @@ button:active{transform:scale(.96)}
 #resultOverlay.show #resultTitle{animation:resultTitlePop .6s cubic-bezier(.2,.9,.3,1) both}
 @keyframes resultTitlePop{0%{opacity:0;transform:scale(.4)}55%{opacity:1;transform:scale(1.14)}78%{transform:scale(.96)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){.screen-enter,.buy-stamp{animation:none!important}#screenTitle:after{display:none}button:active{transform:none}}
+/* ===== 発熱対策：常時アニメーションの削減（2026-11-25） =====
+   ・タイトル画面の無限ループ（星の瞬き／流れ星／浮遊／光沢）は全て停止し、静止表示にする
+   ・バトルの脈動は box-shadow アニメーション（毎フレーム再描画で最も重い）を廃止し、静止グローに置換
+   ・残す脈動は transform / opacity のみで、周期を長くして頻度を下げる
+   ・画面が非表示の間は body.anim-paused で全アニメーションを一時停止する（JS側で制御）
+   ※「動き：OFF」（body.reduce-motion）のときは従来どおり全アニメーションが止まる */
+/* --- タイトル画面：ループ停止 --- */
+.stars span{animation:none;opacity:.5}
+.stars span:nth-child(3n){opacity:.22}
+.stars span:nth-child(4n){opacity:.85}
+.stars span:nth-child(5n){opacity:.35}
+.shooting{display:none}
+.title-hero{animation:riseIn .8s cubic-bezier(.2,.8,.3,1) both}
+.game-title{animation:riseIn .8s cubic-bezier(.2,.8,.3,1) .12s both}
+#screenTitle:after{display:none}
+/* --- バトル：box-shadow脈動を静止グローへ --- */
+.cell.range{animation:none;box-shadow:inset 0 0 0 2px rgba(255,217,77,.55)}
+.cell.atk{animation:none;box-shadow:inset 0 0 0 2px rgba(255,82,82,.6)}
+.cell.range:before,.cell.atk:before{animation:none}
+.cell.atk .unit-wrap:not(.hit):not(.lunge){animation:none}
+.atk-dmg,.atk-chip.adv,.atk-chip.kill,.atk-stack{animation:none}
+.unit-wrap.ready:after{animation:none}
+.cell.hq-ready{animation:none;box-shadow:inset 0 0 0 3px #ffd94d,inset 0 0 10px rgba(255,217,77,.4)}
+.cell.hq-lockon{animation:none;box-shadow:inset 0 0 0 3px #ff2d2d,0 0 8px rgba(255,45,45,.55)}
+.path-dest{animation:none}
+.target-btn{animation:none;box-shadow:0 0 8px rgba(224,35,35,.3)}
+.bar-btns #attackBtn{animation:none}
+.aim-line{animation:none}
+/* --- 残す脈動は低頻度に --- */
+.atk-reticle{animation-duration:1.6s}
+.cell.threat:before{animation-duration:2.4s}
+.pv-danger{animation-duration:2s}
+/* --- 非表示時は全アニメーション停止 --- */
+body.anim-paused *,body.anim-paused *:before,body.anim-paused *:after{animation-play-state:paused!important}
 </style></head>
 <body>
 <div class="wrap">
@@ -696,6 +730,20 @@ flushFx=function(){
       }).catch(function(){ /* 未対応の配信形態では通常のブラウザキャッシュで動作 */ });
     });
   }
+})();
+</script>
+<script>
+/* 発熱対策：画面が見えていない間は CSS アニメーションを全て一時停止する。
+   バトル以外の画面では無限ループ自体を CSS 側で廃止済みのため、
+   ここでは visibilitychange / pagehide による停止だけを担う。 */
+(function(){
+  function syncAnimPause(){
+    document.body.classList.toggle("anim-paused", !!document.hidden);
+  }
+  document.addEventListener("visibilitychange", syncAnimPause);
+  window.addEventListener("pagehide", function(){ document.body.classList.add("anim-paused"); });
+  window.addEventListener("pageshow", syncAnimPause);
+  syncAnimPause();
 })();
 </script>
 </body>
