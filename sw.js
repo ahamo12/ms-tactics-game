@@ -1,7 +1,7 @@
 /* MS戦術シミュレーション（キャラ×機体） Service Worker
    ゲーム本体と画像をキャッシュし、オフラインでも開けるようにします。
    このファイルは assets/ 配下に置かれるため、パスはすべて相対指定です。 */
-var CACHE_NAME = 'ms-tactics-v2';
+var CACHE_NAME = 'ms-tactics-v4';
 var PRECACHE = [
   '../index.html',
   './manifest.webmanifest',
@@ -15,23 +15,32 @@ var PRECACHE = [
   './ms-ball.webp',
   './ms-bigzam.webp',
   './ms-brawbro.webp',
+  './ms-chargelgoog.webp',
   './ms-charzaku.webp',
   './ms-charzgok.webp',
   './ms-corefighter.webp',
   './ms-dom.webp',
+  './ms-domtropen.webp',
   './ms-elmeth.webp',
   './ms-gelgoog.webp',
   './ms-gelgooghm.webp',
+  './ms-giradoga.webp',
   './ms-gm.webp',
   './ms-gogg.webp',
   './ms-gouf.webp',
+  './ms-goufcustom.webp',
   './ms-guncannon.webp',
   './ms-gundam.webp',
   './ms-guntank.webp',
   './ms-gyan.webp',
   './ms-hygogg.webp',
+  './ms-jagddoga.webp',
+  './ms-jegan.webp',
+  './ms-nu.webp',
   './ms-rickdom.webp',
+  './ms-sazabi.webp',
   './ms-zaku2.webp',
+  './ms-zakufz.webp',
   './ms-zeong.webp',
   './ms-zgok.webp',
   './pilot-amuro.webp',
@@ -63,7 +72,15 @@ var PRECACHE = [
   './pilot-sleggar.webp',
   './pilot-slender.webp',
   './pilot-uragan.webp',
-  './title-main.webp'
+  './title-main.webp',
+  './scene-loum.webp',
+  './scene-colony.webp',
+  './scene-odessa.webp',
+  './scene-jaburo.webp',
+  './scene-solomon.webp',
+  './scene-lunar.webp',
+  './scene-abaoku.webp',
+  './scene-cca.webp'
 ];
 
 self.addEventListener('install', function (event) {
