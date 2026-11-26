@@ -1,7 +1,7 @@
 /* MS戦術シミュレーション（キャラ×機体） Service Worker
    ゲーム本体と画像をキャッシュし、オフラインでも開けるようにします。
    このファイルは assets/ 配下に置かれるため、パスはすべて相対指定です。 */
-var CACHE_NAME = 'ms-tactics-v4';
+var CACHE_NAME = 'ms-tactics-v6';
 var PRECACHE = [
   '../index.html',
   './manifest.webmanifest',
